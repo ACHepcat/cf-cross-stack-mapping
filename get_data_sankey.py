@@ -1,13 +1,26 @@
 #!/usr/bin/env python
+"""
+Get data sankey:
+Takes a parameter that is the name of the AWS profile to use.
+Default profile is 'default'.
+"""
+
 import boto3
 import re
+import sys
 
-f1=open('sourcedata-output.json', 'w+')
-inuser = boto3.session.Session(profile_name='default')
+profilename = 'default'
+if len(sys.argv) == 2:
+    profilename = sys.argv[1]
+    print("Setting profilename to ", profilename)
+
+
+sourcedatafile = open('sourcedata-output.json', 'w+')
+inuser = boto3.session.Session(profile_name=profilename)
 client = inuser.client('cloudformation')
 response = client.list_exports()
 l = response.get('Exports', {})
-print >>f1, '{ "links": ['
+sourcedatafile.write('{ "links": [')
 output1 = []
 for x in l:
     s = x['ExportingStackId']
@@ -23,8 +36,8 @@ for x in l:
                 output1.append(o2)
     except:
         pass
-print >>f1, ",\n".join(output1)
-print >>f1, '], "nodes": ['
+sourcedatafile.write(",\n".join(output1))
+sourcedatafile.write('], "nodes": [')
 output2 = []
 for x in l:
     s = x['ExportingStackId']
@@ -43,6 +56,6 @@ for x in l:
                 output2.append(o3)
     except:
         pass
-print >>f1, ",\n".join(list(set(output2)))
-print >>f1, ']}'
-f1.close()
+sourcedatafile.write(",\n".join(list(set(output2))))
+sourcedatafile.write(']}')
+sourcedatafile.close()
