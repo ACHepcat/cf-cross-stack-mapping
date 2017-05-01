@@ -12,7 +12,9 @@ import sys
 profilename = 'default'
 if len(sys.argv) == 2:
     profilename = sys.argv[1]
-    print("Setting profilename to ", profilename)
+    print('-- Using %(profile)s profile --' % {'profile': profilename})
+else:
+    print("-- Using 'default' profile --")
 
 
 sourcedatafile = open('sourcedata-output.json', 'w+')
@@ -27,6 +29,7 @@ for x in l:
     t = x["Name"]
     o1 = str('{"source":"' + re.search('.*/(.*)/.*', s).group(1) + '","target":"' + t + '","value":"1.0"}')
     output1.append(o1)
+    print(o1)
     try:
         if client.list_imports(ExportName=t):
             cl = client.list_imports(ExportName=t)
@@ -34,6 +37,7 @@ for x in l:
             for x in im:
                 o2 = str('{"source":"' + t + '","target":"' + x + '","value":"1.0"}')
                 output1.append(o2)
+                print(o2)
     except:
         pass
 sourcedatafile.write(",\n".join(output1))
@@ -43,9 +47,11 @@ for x in l:
     s = x['ExportingStackId']
     o1 = str('{"name":"' + re.search('.*/(.*)/.*', s).group(1) + '"}')
     output2.append(o1)
+    print(o1)
 for x in l:
     o2 = str('{"name":"' + x["Name"] + '"}')
     output2.append(o2)
+    print(o2)
     t = x["Name"]
     try:
         if client.list_imports(ExportName=t):

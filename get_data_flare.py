@@ -13,7 +13,9 @@ import sys
 profilename = 'default'
 if len(sys.argv) == 2:
     profilename = sys.argv[1]
-    print("Setting profilename to ", profilename)
+    print('-- Using %(profile)s profile --' % {'profile': profilename})
+else:
+    print("-- Using 'default' profile --")
 
 inuser = boto3.session.Session(profile_name=profilename)
 client = inuser.client('cloudformation')
