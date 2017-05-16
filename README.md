@@ -18,18 +18,19 @@ source myvirtualenvironment/bin/activate
 pip install -r requirements.txt
 ```
 
-##### Running the app
-The application is comprised of 2 scripts, `get_data_flare.py` and `get_data_sankey.py` that retrieve data from the AWS account via the `awscli` configurations.  By default, the scripts will read from the `default` profile.  This can be overridden by passing a profile name to the script on the command line.  The scripts will generate files that are then read by the webpage that is served in order to display the generated charts.
-
+### Script Overview
 ##### get_data_flare.py
 This script will generate a visualization of the stacks in use along with their respective Outputs / Exports.  It does NOT link the stacks and serves primarily as an inventory of output variables.  This is acheived by creating a CSV file that is then used as a data source for http://localhost:8000/index-flare.html (when run locally).
 
 ##### get_data_sankey.py
 This script creates a Sankey diagram of all stacks and the relationships between the Outputs / Exports of a stack and the downstream stacks that are using those exports.  The Sankey is accessed by following the steps listed below and is hosted on the default 8000 port.
 
+### Running the app
+The application is comprised of 2 scripts, `get_data_flare.py` and `get_data_sankey.py` that retrieve data from the AWS account via the `awscli` configurations.  By default, the scripts will read from the `default` profile.  This can be overridden by passing a profile name to the script on the command line.  The scripts will generate files that are then read by the webpage that is served in order to display the generated charts.
+
 ###### Steps
-1. Run `./get_data_flare.py <optional-profile-name>`
-1. Run `./get_data_sankey.py <optional-profile-name>`
+1. Run `./get_data_flare.py <optional-aws-profile-name>`
+1. Run `./get_data_sankey.py <optional-aws-profile-name>`
 1. Start a simple webserver in the same directory for local display
   1. Python provides a simple HTTP server via `python3 -m http.server` on the command line with a default port of `8000`
 1. Navigate to http://localhost:8000 to view the Sankey chart
