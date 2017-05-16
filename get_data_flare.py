@@ -25,23 +25,23 @@ l = response.get('Exports', {})
 tempfile.write('id,value\n')
 tempfile.write('Templates,\n')
 for x in l:
-    s = x['ExportingStackId']
-    t = x["Name"]
-    print(s)
-    print(t)
+    stackARN = x['ExportingStackId']
+    exportedVariableName = x["Name"]
+    print('Stack ARN: %(stackId)s' % {'stackId': stackARN})
+    print('Export Name: %(stackName)s' % {'stackName': exportedVariableName})
     tempfile.write('.'.join(['Templates',
-                             re.search('.*/(.*)/.*', s).group(1), t]) + ',\n')
-    print ('.'.join(['Templates',
-                     re.search('.*/(.*)/.*', s).group(1), t]) + ',\n')
-    j = re.search('.*/(.*)/.*', s).group(1)
-    tempfile.write('.'.join(['Templates', j]) + ',')
-    print('.'.join(['Templates', j]) + ',')
+                             re.search('.*/(.*)/.*', stackARN).group(1), exportedVariableName]) + ',\n')
+    # print ('.'.join(['Templates',
+    #                  re.search('.*/(.*)/.*', stackARN).group(1), exportedVariableName]) + ',\n')
+    j = re.search('.*/(.*)/.*', stackARN).group(1)
+    tempfile.write('.'.join(['Templates', j]) + ',\n')
+    # print('.'.join(['Templates', j]) + ',')
     try:
-        if client.list_imports(ExportName=t):
-            cl = client.list_imports(ExportName=t)
+        if client.list_imports(ExportName=exportedVariableName):
+            cl = client.list_imports(ExportName=exportedVariableName)
             im = cl["Imports"]
             for x in im:
-                print >>tempfile, '.'.join(['Templates', j, t, x]) + ','
+                print >> tempfile, '.'.join(['Templates', j, exportedVariableName, x]) + ','
     except:
         pass
 tempfile.close()
